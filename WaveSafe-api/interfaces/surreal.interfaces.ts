@@ -1,7 +1,8 @@
-import { User } from "./data.interface";
+import { User } from "./data.interface.ts";
 
 export interface SurrealConfig {
   url: string;
+  port: number;
   namespace: string;
   database: string;
   username: string;

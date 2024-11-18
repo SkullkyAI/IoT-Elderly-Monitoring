@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
-  selector: 'app-login',
+  selector: 'WaveLife-login',
   standalone: true,
   imports: [
     CommonModule,
@@ -11,4 +11,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginPageComponent { }
+export class LoginComponent {
+  name=input();
+  logo = input();
+}
