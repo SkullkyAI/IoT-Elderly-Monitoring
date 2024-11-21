@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+.dropdown-menu {
+  margin-left: -105px;
+  margin-top: 40px;
+}
+
+#alert-button {
+  background-color: transparent;
+  border-color: transparent;
+  margin-left:1625px;
+}

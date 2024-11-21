@@ -5,63 +5,10 @@
       WaveLife
     </a>
 
-      <button id="alert-button" href="nav-item" data-bs-toggle="offcanvas" data-bs-target="#alertPanel" aria-controls="alertPanel">
-          <img src="alert.svg" alt="Notification icon" width="35" height="35" class="d-inline-block align-text-top">
-          @if (alert() != 0) {
-            <span class="position-absolute top-1 start-200 translate-middle badge rounded-pill bg-danger">
-              {{alert()}}
-              <span class="visually-hidden">unread messages</span>
-            </span>
-          }
-      </button>
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="alertPanel" aria-labelledby="alertPanelLabel">
-          <div class="offcanvas-header">
-            <h4 class="offcanvas-title" id="alertPanelLabel">Alert Notifications</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          @if (alert() == 0) {
-            <div class="offcanvas-body">
-              <img src="notif-check.svg" alt="check" width="55" height="55">
-              <h5>Without Alerts</h5>
-            </div>
-          }@else {
-            @for (item of alertList; track $index) {
-              <button class="offcanvas-body columns mb-2 border-round-left w-10">
-                <div class="card-body w-6rem">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in </p>
-                </div>
-              </button>
-            }
-          }
-        </div>
+    <notification-alert [alert]="alert()" [alertList]="alertList"/>
+    <navbar-settings />
 
 
-      <a class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="true">
-          <img src="user_icon.png" alt="User icon" width="35" height="35" class="d-inline-block align-text-top" style="padding-right: 6px;">
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">
-            <img src="profile.svg" alt="Logout icon" width="20" height="20">
-            Profile
-          </a></li>
-          <li><a class="dropdown-item" href="#">
-            <img src="newPacient.svg" alt="Logout icon" width="20" height="20" style="padding-right: 6px;">
-            New Pacient
-          </a></li>
-          <li><a class="dropdown-item" href="#">
-            <img src="conf.svg" alt="Logout icon" width="20" height="20" style="padding-right: 6px;">
-            Configuration
-          </a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="#" (click)="signOut()">
-            <img src="sign_out.svg" alt="Logout icon" width="25" height="25" style="padding-right: 6px;">
-            Sign Out
-
-          </a></li>
-        </ul>
-      </a>
 
 
 
