@@ -1,17 +1,13 @@
-<nav class="navbar" style="background: linear-gradient(to right, lightgreen, turquoise, lightblue);" data-bs-theme="dark">
+<nav class="navbar" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="home">
       <img src="favicon.ico" alt="Logo" width="35" height="29" class="d-inline-block align-text-top">
       WaveLife
     </a>
-
-    <notification-alert [alert]="alert()" [alertList]="alertList"/>
-    <navbar-settings />
-
-
-
-
-
+    <div class="d-flex align-items-center gap-2">
+      <notification-alert class="col" [alertList]="alertList()"/>
+      <navbar-settings class="col" />
+    </div>
 
   </div>
 </nav>

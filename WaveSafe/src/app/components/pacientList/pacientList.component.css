@@ -1,3 +1,11 @@
 :host {
   display: block;
 }
+
+div {
+  display: flex;
+}
+pacient-card{
+  margin-left: 10px;
+  margin-right: 10px;
+}

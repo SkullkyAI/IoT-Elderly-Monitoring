@@ -8,6 +8,8 @@ export interface User{
 
 export interface Pacient{
   id: string;
+  image: string;
+  dni: string;
   name: string;
   surname: string;
   age: number;

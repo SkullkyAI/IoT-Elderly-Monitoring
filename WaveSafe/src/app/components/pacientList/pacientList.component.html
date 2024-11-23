@@ -1,0 +1,9 @@
+<div>
+  @for (pacient of pacientList; track $index) {
+    @defer(on timer(5000))  {
+      <pacient-card [info]="pacient"/>
+    } @placeholder {
+      <pacient-card [info]=""/>
+    }
+  }
+</div>

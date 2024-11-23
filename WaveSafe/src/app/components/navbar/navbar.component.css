@@ -1,3 +1,7 @@
 :host {
   display: block;
 }
+nav{
+  background: linear-gradient(to right, lightgreen, turquoise, lightblue);
+}
+

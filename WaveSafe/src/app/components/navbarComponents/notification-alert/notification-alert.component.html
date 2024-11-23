@@ -1,12 +1,13 @@
 <button id="alert-button" href="nav-item" data-bs-toggle="offcanvas" data-bs-target="#alertPanel" aria-controls="alertPanel">
   <img src="alert.svg" alt="Notification icon" width="35" height="35" class="d-inline-block align-text-top">
-  @if (alert() != 0) {
+  @if (alert() !== 0) {
     <span class="position-absolute top-1 start-200 translate-middle badge rounded-pill bg-danger">
-      {{alert()}}
+      {{alert().toString()}}
       <span class="visually-hidden">unread messages</span>
     </span>
   }
 </button>
+
 <div class="offcanvas offcanvas-start" tabindex="-1" id="alertPanel" aria-labelledby="alertPanelLabel">
   <div class="offcanvas-header">
     <h4 class="offcanvas-title" id="alertPanelLabel">Alert Notifications</h4>
@@ -19,12 +20,7 @@
     </div>
   }@else {
     @for (item of alertList(); track $index) {
-      <button class="offcanvas-body columns mb-2 border-round-left w-10">
-        <div class="card-body w-6rem">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in </p>
-        </div>
-      </button>
+        <alert-card />
     }
   }
 </div>

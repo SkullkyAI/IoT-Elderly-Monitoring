@@ -1,3 +1,9 @@
 :host {
   display: block;
 }
+
+#alert-button{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}

@@ -15,11 +15,9 @@ import {NavbarSettingsComponent} from '../navbarComponents/navbarSettings/navbar
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent {
-  alertList: Array<number | string> = [1, 2, 3, 4, 5];
-  alert = signal<number|string>(0);
-
+  alertList = signal<Array<number>>([]);
   constructor() {
-    this.alert.set(this.alertList.length);
+    console.log(this.alertList());
   }
 
 

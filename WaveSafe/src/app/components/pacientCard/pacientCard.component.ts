@@ -1,14 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Pacient } from '../../interfaces/data.interface';
 
 @Component({
-  selector: 'app-pacient-card',
-  standalone: true,
-  imports: [
-    CommonModule,
-  ],
-  template: `<p>pacientCard works!</p>`,
+  selector: 'pacient-card',
+  imports: [],
+  templateUrl: './pacientCard.component.html',
   styleUrl: './pacientCard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PacientCardComponent { }
+export class PacientCardComponent {
+  info = input<Pacient>();
+ }
