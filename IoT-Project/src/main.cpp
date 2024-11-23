@@ -1,74 +1,63 @@
 #include <Arduino.h>
-#include <BLEPeripheral.h>
-#include <Ticker.h>
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+#include <string>
+#include "nvs_flash.h"
 
-// LED pins
-#define LED1 2
-#define LED2 3
-#define LED3 4
-#define LED4 5
+#include "utils.h"
+#include "image_array1.h"
 
-// BLE setup
-BLEPeripheral blePeripheral;    
+#define LED_BUILTIN 2
 
-// Use the generated UUID for the BLE service
-BLEService bleService("671da122-ba08-4a31-85cc-bb3760382d6f");  // Custom service UUID
+BLEServer *imageServer = NULL;
 
-// Create a BLE characteristic with NOTIFY property and an example characteristic UUID
-BLECharacteristic bleCharacteristic("87654321-4321-8765-4321-fedcba987654", BLERead | BLENotify, 20);
-BLEDescriptor cccdDescriptor("2902", "CCCD");
+// Services
+#define IMAGE_SERVICE_UUID "0000181a-0000-1000-8000-00805f9b34fb" // Environmental Sensing Service (ESS) UUiD: 0x181A
+BLEService *imageService = NULL;
 
-// Ticker for interrupt
-Ticker ticker;
-volatile bool updateValue = false;
+// Characteristics
+#define IMAGE_CHARACTERISTIC_UUID "0000181a-0000-1000-8000-00805f9b34fc" // Body Composition Service (BCS) UUID: 0x181B
+BLECharacteristic *imageCharacteristic = NULL;
 
-// Function to toggle LED and set notification flag
-void toggleLED() {
-  static bool ledState = false;
-  digitalWrite(LED1, ledState);
-  ledState = !ledState;
-  updateValue = true;
-}
+// Other Globals
+const std::string DEVICE_NAME = "IoT9_ESP32";
+const uint8_t END_MARKER[] = { 0xFF, 0xFF, 0xFF };
 
 void setup() {
-  // Initialize LEDs
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(LED3, OUTPUT);
-  pinMode(LED4, OUTPUT);
-
-  // BLE setup
-  blePeripheral.setLocalName("NRF52-Peripheral");
-  blePeripheral.setAdvertisedServiceUuid(bleService.uuid());
-
-  // Add characteristic and descriptor
-  bleService.addCharacteristic(bleCharacteristic);
-  bleCharacteristic.addDescriptor(cccdDescriptor);
-  blePeripheral.addAttribute(bleService);
-
-  // Start BLE advertising
-  blePeripheral.begin();
-  
-  // Ticker to toggle LED every 1 second
-  ticker.attach(1.0, toggleLED);
-
+  pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
-  Serial.println("BLE Peripheral Ready and Advertising...");
+
+  // Clean
+  esp_err_t err = nvs_flash_init();
+  if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    ESP_ERROR_CHECK(nvs_flash_erase());
+    err = nvs_flash_init();
+  }
+  
+  // Initialize BLE Device
+  BLEDevice::init(DEVICE_NAME);
+  imageServer = BLEDevice::createServer();
+
+  // Main Service
+  imageService = imageServer->createService(IMAGE_SERVICE_UUID);
+
+  // Main Characteristic
+  imageCharacteristic = imageService->createCharacteristic(
+                          IMAGE_CHARACTERISTIC_UUID,
+                          BLECharacteristic::PROPERTY_NOTIFY
+                        );
+  
+  // Start Advertising BLE
+  imageService->start();
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->start();
+
+  std::string message = "BLE device is now advertising with name: " + DEVICE_NAME;
+  Serial.println(message.c_str());
 }
 
 void loop() {
-  blePeripheral.poll();
-
-  if (updateValue) {
-    // Generate a random value to notify
-    uint8_t value[2] = { random(0, 100), random(0, 100) };
-    bleCharacteristic.setValue(value, sizeof(value));
-
-    Serial.print("Notifying value: ");
-    Serial.print(value[0]);
-    Serial.print(", ");
-    Serial.println(value[1]);
-
-    updateValue = false;
-  }
+  sendImage(imageCharacteristic, image, image_size, 20, 50);
+  delay(5000);
 }
