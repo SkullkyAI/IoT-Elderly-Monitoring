@@ -13,7 +13,8 @@ export interface Pacient{
   name: string;
   surname: string;
   age: number;
-  medical_score: number;
+  medical_summary: string;
+  additional_medical_details: string;
   floor: number;
   room: number;
 }

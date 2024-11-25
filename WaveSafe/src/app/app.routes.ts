@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/authGuard.guard';
+import { AuthRedirectGuard } from './guards/auth-redirect.guard';
 
 export const routes: Routes = [
   {
     path:'login',
-    loadComponent: () => import('./pages/loginPage/loginPage.component').then(m => m.LoginPageComponent)
+    loadComponent: () => import('./pages/loginPage/loginPage.component').then(m => m.LoginPageComponent),
+    canActivate: [AuthRedirectGuard]
   },
   {
     path: 'home',
@@ -18,6 +20,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'home'
+    redirectTo: 'login'
   }
 ];

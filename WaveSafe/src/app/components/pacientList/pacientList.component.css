@@ -4,8 +4,12 @@
 
 div {
   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
 }
-pacient-card{
-  margin-left: 10px;
-  margin-right: 10px;
+
+pacient-card {
+  flex: 0 0 calc(33.33% - 14px);
+  /* Eliminamos margin-left y margin-right ya que gap maneja el espaciado */
 }

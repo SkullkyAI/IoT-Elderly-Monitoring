@@ -2,13 +2,17 @@
   <div class="row g-0">
     @if (info()) {
       <div class="col-md-4">
-        <img src="..." class="img-fluid rounded-start" alt="...">
+        <!-- <img [src]="info()!.image|base64Image" class="img-fluid rounded-start" alt="..."> -->
+        <img [src]="info()!.image" class="img-fluid rounded-start" [alt]=" info()!.name + info()!.surname ">
       </div>
       <div class="col-md-8">
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+          <h5 class="card-title"><strong>Name:</strong> {{info()!.name}}{{info()!.surname}} </h5>
+          <p class="card-text"><strong>Age:</strong> {{info()!.age}}</p>
+          <p class="card-text"><strong>Medical summary:</strong> {{info()!.medical_summary}}
+            <small>{{info()!.additional_medical_details}}</small>
+          </p>
+          <p class="card-text"><small class="text-body-secondary">Floor: {{info()!.floor}}  Room: {{info()!.room}} </small></p>
         </div>
       </div>
     }@else {
@@ -17,9 +21,12 @@
       </div>
       <div class="col-md-8">
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          <p class="card-text"><small class="text-body-secondary">Updating...</small></p>
+          <div class="text-loader" style="--width: 200px"></div>
+          <div class="text-loader" style="--width: 80px"></div>
+          <div class="text-loader" style="--width: 285px"></div>
+          <div class="text-loader" style="--width: 285px"></div>
+          <div class="text-loader" style="--width: 285px"></div>
+          <div class="text-loader text-body-secondary" style="--width: 125px"></div>
         </div>
       </div>
     }

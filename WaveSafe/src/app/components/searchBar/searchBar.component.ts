@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 enum TypeSearch {
   ByName = 'By Name',
-  ByType = 'By Type',
+  ByBni = 'By Dni',
 }
 @Component({
   selector: 'search-bar',
