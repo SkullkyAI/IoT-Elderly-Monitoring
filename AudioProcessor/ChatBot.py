@@ -5,7 +5,7 @@ import sys
 import requests
 
 # Configure the Gemini API
-os.environ["GOOGLE_API_KEY"] = "AIzaSyBIcgOZS9W_DiJ_YkznHykvgIy7_85yJfM"
+os.environ["GOOGLE_API_KEY"] = ""
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 # Initialize the Gemini model
