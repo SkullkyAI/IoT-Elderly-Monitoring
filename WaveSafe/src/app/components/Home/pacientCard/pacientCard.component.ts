@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Pacient } from '../../interfaces/data.interface';
+import { Pacient } from '../../../interfaces/data.interface';
 // import { Base64ImagePipe } from '../../pipes/imageTransform.pipe';
 
 @Component({

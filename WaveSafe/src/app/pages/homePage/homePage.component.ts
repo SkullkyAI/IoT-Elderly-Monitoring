@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { Base64ImagePipe } from '../../pipes/imageTransform.pipe';
-import { SearchBarComponent } from '../../components/searchBar/searchBar.component';
-import { PacientListComponent } from '../../components/pacientList/pacientList.component';
+import { SearchBarComponent } from '../../components/Home/searchBar/searchBar.component';
+import { PacientListComponent } from '../../components/Home/pacientList/pacientList.component';
 
 @Component({
-    selector: 'app-home-page',
     imports: [
     CommonModule,
     NavbarComponent,
@@ -19,5 +18,4 @@ import { PacientListComponent } from '../../components/pacientList/pacientList.c
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomePageComponent {
-  image:string = "";
  }

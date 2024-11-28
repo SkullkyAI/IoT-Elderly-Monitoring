@@ -3,7 +3,9 @@
     @if (info()) {
       <div class="col-md-4">
         <!-- <img [src]="info()!.image|base64Image" class="img-fluid rounded-start" alt="..."> -->
-        <img [src]="info()!.image" class="img-fluid rounded-start" [alt]=" info()!.name + info()!.surname ">
+        <a href="pacient/{{info()?.id}}">
+          <img [src]="info()!.image" class="img-fluid rounded-start" [alt]=" info()!.name + info()!.surname ">
+        </a>
       </div>
       <div class="col-md-8">
         <div class="card-body">

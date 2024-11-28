@@ -1,3 +1,25 @@
 :host {
   display: block;
 }
+
+.loader {
+  width: 88px;
+  height: 88px;
+  border: 10px solid #FFF;
+  border-bottom-color: #FF3D00;
+  border-radius: 50%;
+  position: absolute;
+  /* top: 50%;*/
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

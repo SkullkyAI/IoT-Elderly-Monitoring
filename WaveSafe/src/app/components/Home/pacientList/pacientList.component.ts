@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { Pacient } from '../../interfaces/data.interface';
+import { Pacient } from '../../../interfaces/data.interface';
 import { PacientCardComponent } from "../pacientCard/pacientCard.component";
 
 
@@ -55,7 +55,7 @@ export class PacientListComponent {
     },
     {
       id: '4',
-      image: '../../../../public/imagenes_provisional/AnaMartínez.webp',
+      image: 'https://wave-safe.s3.eu-west-1.amazonaws.com/fotos_pacientes_IA/AnaMart%C3%ADnez.webp',
       dni: '74567890D',
       name: 'Ana',
       surname: 'Martínez',
