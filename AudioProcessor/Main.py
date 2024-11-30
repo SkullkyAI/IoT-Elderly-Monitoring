@@ -1,14 +1,14 @@
 import speech_recognition as sr
-import ChatBot as chatbot
+from chatBot import Chatbot
 
 # Initialize speech recognizer
 recognizer = sr.Recognizer()
 
 # Activation and shutdown phrases
 activation_phrases = ["hello", "hi", "hey", "anna"]
-shutdown_phrases = ["turn off device", "shutdown", "power off", "stop listening"]
+shutdown_phrases = ["turn off device", "shutdown", "shut down", "power off", "stop listening"]
 
-def listen_for_voice_command():
+def listen_for_voice_command(chatbot: Chatbot):
     """
     Listens for voice commands and processes activation/shutdown phrases.
     """
@@ -29,12 +29,12 @@ def listen_for_voice_command():
             # Check for activation phrases
             if user_input in activation_phrases:
                 chatbot.speak("Hello! How can I assist you today?")
-                return "activated"
+                return "activate"
 
             # Check for deactivation phrases
             if user_input in chatbot.exit_phrases:
                 chatbot.speak("Goodbye! I’ll stop chatting for now.")
-                return "deactivated"
+                return "deactivate"
 
             # Pass user input to the chatbot only if already active
             return user_input
@@ -48,29 +48,44 @@ def listen_for_voice_command():
 
     return None
 
+stop_commands = ["shutdown"]
+activate_commands = ["activate"]
+deactivate_commands = ["deactivate"]
+total_commands = stop_commands + activate_commands + deactivate_commands + [None]
 
-def monitor():
+def main():
     """
     Main monitoring function that continuously listens for commands.
     """
-    print("Device is ready. Say 'Hello' to activate or 'Shutdown' to turn off.")
+    print(total_commands)
+
+    chatbot = Chatbot()
     active = False
 
+    print("Device is ready. Say 'Hello' to activate or 'Shutdown' to turn off.")
+
     while True:
-        command = listen_for_voice_command()
+        command = listen_for_voice_command(chatbot)
+        if command in stop_commands:
+            break # Exit de loop and stop the program
 
-        if command == "shutdown":
-            break  # Exit the loop and stop the program
-        elif command == "activated":
-            active = True
-        elif command == "deactivated":
-            active = False
+        if active:
+            if command in deactivate_commands:
+                active = False
+            if command not in total_commands:
+                chatbot.voice_chatbot(command)
+        else:
+            if command in activate_commands:
+                active = True
+                chatbot.voice_chatbot(command)
+            if command not in total_commands:
+                print("Ignored input because the chatbot is not active.")
 
-        # Only process chatbot interactions if active
-        if active and command not in ["shutdown", "activated", "deactivated", None]:
-            chatbot.voice_chatbot(command)
-        elif not active and command not in ["shutdown", "activated", "deactivated", None]:
-            print("Ignored input because the chatbot is not active.")
+import os
+def test():
+    chatbot = Chatbot()
+    chatbot.detect_fall(os.path.join("fall_dataset", "fall01.jpg"))
 
 if __name__ == "__main__":
-    monitor()
+    #main()
+    test()
