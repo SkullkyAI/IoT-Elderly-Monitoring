@@ -20,6 +20,9 @@ BLEService *imageService = NULL;
 #define IMAGE_CHARACTERISTIC_UUID "0000181a-0000-1000-8000-00805f9b34fc" // Body Composition Service (BCS) UUID: 0x181B
 BLECharacteristic *imageCharacteristic = NULL;
 
+// Advertising
+BLEAdvertising *deviceAdvertising = NULL;
+
 // Other Globals
 const std::string DEVICE_NAME = "IoT9_ESP32";
 const uint8_t END_MARKER[] = { 0xFF, 0xFF, 0xFF };
@@ -50,14 +53,21 @@ void setup() {
   
   // Start Advertising BLE
   imageService->start();
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising->start();
+  deviceAdvertising = BLEDevice::getAdvertising();
+  deviceAdvertising->start();
 
   std::string message = "BLE device is now advertising with name: " + DEVICE_NAME;
   Serial.println(message.c_str());
 }
 
 void loop() {
-  sendImage(imageCharacteristic, image, image_size, 20, 50);
-  delay(5000);
+  static unsigned long lastAdvertisingTime = 0;
+
+  if (millis() - lastAdvertisingTime > 10000) {
+    deviceAdvertising->start();
+    Serial.println("Advertising again...");
+    lastAdvertisingTime = millis();
+  }
+  sendImage(imageCharacteristic, image, image_size, 508, 10);
+  delay(100);
 }
