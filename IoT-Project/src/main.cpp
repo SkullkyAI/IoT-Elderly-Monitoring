@@ -26,10 +26,13 @@ BLEAdvertising *deviceAdvertising = NULL;
 // Other Globals
 const std::string DEVICE_NAME = "IoT9_ESP32";
 const uint8_t END_MARKER[] = { 0xFF, 0xFF, 0xFF };
+uint8_t *imageData;
+size_t imageSize = 0;
+size_t imageIndex = 0;
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // Clean
   esp_err_t err = nvs_flash_init();
@@ -58,16 +61,43 @@ void setup() {
 
   std::string message = "BLE device is now advertising with name: " + DEVICE_NAME;
   Serial.println(message.c_str());
+
+  // Initialize image buffer to a fixed size
+  imageData = (uint8_t *)malloc(512 * 512);
 }
 
 void loop() {
   static unsigned long lastAdvertisingTime = 0;
+  static bool imageReady = false;
 
   if (millis() - lastAdvertisingTime > 10000) {
     deviceAdvertising->start();
     Serial.println("Advertising again...");
     lastAdvertisingTime = millis();
   }
-  sendImage(imageCharacteristic, image, image_size, 508, 10);
+
+  while (Serial.available() > 0) {
+    uint8_t byte = Serial.read();
+
+    if (imageSize == 0) {
+      if (imageIndex < 4) {
+        imageSize |= (size_t)byte << (8 * imageIndex);
+        imageIndex++;
+      }
+    } else {
+      if (imageIndex < imageSize) {
+        imageData[imageIndex++] = byte;
+      }
+      if (imageIndex == imageSize) {
+        imageReady = true;
+        break;
+      }
+    }
+  }
+  if (imageReady) {
+    sendImage(imageCharacteristic, imageData, image_size, 508, 10);
+    imageReady = false;
+  }
+  
   delay(100);
 }
