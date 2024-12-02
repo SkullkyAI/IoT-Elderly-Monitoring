@@ -14,11 +14,11 @@ class FallDetector:
         self.model = genai.GenerativeModel(model_name='gemini-1.5-flash')
     
     async def process_images(self):
-        # while True:
+        while True:
             try:
                 image_path = await self.image_queue.get()
-                # if image_path is None:
-                #     break
+                if image_path is None:
+                    break
                 image = Image.open(image_path)
                 response = self.detect_fall(image)
                 print(response)

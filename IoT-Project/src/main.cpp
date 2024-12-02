@@ -7,6 +7,8 @@
 
 #include "utils.h"
 #include "image_array1.h"
+#include "image_array2.h"
+#include "image_array3.h"
 
 #define LED_BUILTIN 2
 
@@ -25,7 +27,8 @@ BLEAdvertising *deviceAdvertising = NULL;
 
 // Other Globals
 const std::string DEVICE_NAME = "IoT9_ESP32";
-const uint8_t END_MARKER[] = { 0xFF, 0xFF, 0xFF };
+const unsigned char* images[] = {image1, image2, image3};
+const unsigned int imageSizes[] = {image1_size, image2_size, image3_size};
 uint8_t *imageData;
 size_t imageSize = 0;
 size_t imageIndex = 0;
@@ -68,41 +71,43 @@ void setup() {
 
 void loop() {
   static unsigned long lastAdvertisingTime = 0;
-  static bool imageReady = false;
+  static unsigned int index = 0;
+  // static bool imageReady = false;
 
   if (millis() - lastAdvertisingTime > 10000) {
     deviceAdvertising->start();
-    //Serial.println("Advertising again...");
+    Serial.println("Advertising again...");
     lastAdvertisingTime = millis();
   }
 
-  if (Serial.available() > 0) {
-    uint8_t chunk[512];
-    int bytesRead = Serial.readBytes(chunk, 512);
+  // if (Serial.available() > 0) {
+  //   uint8_t chunk[512];
+  //   int bytesRead = Serial.readBytes(chunk, 512);
 
-    for (int i = 0; i < bytesRead; i++) {
-      if (imageSize == 0) {
-        if (imageIndex < 4) {
-          imageSize |= (size_t)chunk[i] << (8 * imageIndex);
-          imageIndex;
-        }
-      } else {
-        if (imageIndex < imageSize) {
-          imageData[imageIndex++] = chunk[i];
-        }
-      }
-    }
-    if (imageIndex >= imageSize) {
-      imageIndex = 0;
-      imageSize = 0;
-      imageReady = true;
-    }
-  }
+  //   for (int i = 0; i < bytesRead; i++) {
+  //     if (imageSize == 0) {
+  //       if (imageIndex < 4) {
+  //         imageSize |= (size_t)chunk[i] << (8 * imageIndex);
+  //         imageIndex;
+  //       }
+  //     } else {
+  //       if (imageIndex < imageSize) {
+  //         imageData[imageIndex++] = chunk[i];
+  //       }
+  //     }
+  //   }
+  //   if (imageIndex >= imageSize) {
+  //     imageIndex = 0;
+  //     imageSize = 0;
+  //     imageReady = true;
+  //   }
+  // }
   
-  if (imageReady) {
-    sendImage(imageCharacteristic, image, image_size, 508, 10);
-    imageReady = false;
-  }
+  // if (imageReady) {
+    sendImage(imageCharacteristic, images[index], imageSizes[index], 508, 10);
+    index = (++index % 3);
+    // imageReady = false;
+  // }
   
-  delay(100);
+  delay(500);
 }

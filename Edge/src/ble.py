@@ -88,8 +88,8 @@ class BLEManager:
             for i in sorted(self.image_buffer.keys()):
                 full_image.extend(self.image_buffer[i])
             
-            asyncio.create_task(self.image_queue.put(self.image_path))
-
             self.save_image(full_image)
 
+            asyncio.create_task(self.image_queue.put(self.image_path))
+            
             self.image_buffer.clear()
