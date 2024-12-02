@@ -2,9 +2,12 @@ from paho.mqtt import client as mqtt_client
 import random
 
 broker = 'broker.emqx.io'
-port = 1883
+port = 8885
 topic = 'python/mqtt'
 client_id = f'python-mqtt-{random.randint(0, 100)}'
+MQTT_USERNAME = ""
+MQTT_PASSWORD = ""
+
 # username = 'emqx'
 # password = 'public'
 
@@ -18,6 +21,7 @@ def connect_mqtt():
     client = mqtt_client.Client(client_id)
 
     client.on_connect = on_connect
+    client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
     client.connect(broker, port)
     return client
 
