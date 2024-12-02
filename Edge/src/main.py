@@ -29,21 +29,17 @@ async def main():
         loop = asyncio.get_running_loop()
         loop.add_signal_handler(signal.SIGINT, shutdown_handler)
         loop.add_signal_handler(signal.SIGTERM, shutdown_handler)
-
+        
         print(f"Connecting to {DEVICE_NAME}...")
-        connected = False
-        while not connected:
-            connected = await ble_manager.scan_devices(DEVICE_NAME)
-            await asyncio.sleep(1)
-
+        connected = await ble_manager.scan_devices(DEVICE_NAME)
+        if not connected:
+            return
         await ble_manager.connect_client(IMAGE_SERVICE_UUID, IMAGE_CHARACTERISTIC_UUID)
         print("BLE Client connected. Press Ctrl+C to exit")
         
-        await detector.process_images()
-        print("Detector stopped. Gemini is expensive (?)")
+        asyncio.create_task(detector.process_images())
 
         await stop_event.wait()
-
     finally:
         print(f"Disconnecting from {DEVICE_NAME}")
         await ble_manager.disconnect_client()

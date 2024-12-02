@@ -25,23 +25,24 @@ class BLEManager:
             await self.client.start_notify(self.char.uuid, self.notification_handler)
     
     async def disconnect_client(self):
-        if self.client.is_connected:
-            await self.client.disconnect()
-        self.client = None
+        if self.client:
+            if self.client.is_connected:
+                await self.client.disconnect()
+            self.client = None
 
     async def scan_devices(self, name: str = None, address: str = None) -> bool:
         if name:
-            device = await BleakScanner.find_device_by_name(name)
+            device = await BleakScanner.find_device_by_name(name, timeout=30)
             if device is None:
                 print(f"Could not find device with name '{name}'")
                 return False
         elif address:
-            device = await BleakScanner.find_device_by_address(address)
+            device = await BleakScanner.find_device_by_address(address, timeout=30)
             if device is None:
                 print(f"Could not find device with address '{address}'")
                 return False
         else:
-            devices = await BleakScanner.discover()
+            devices = await BleakScanner.discover(timeout=30)
             for idx, d in enumerate(devices):
                 print(f"{idx}: {d}")
             idx = int(input(f"Select device number [0-{len(devices) - 1}]: "))

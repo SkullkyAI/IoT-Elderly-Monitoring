@@ -72,30 +72,35 @@ void loop() {
 
   if (millis() - lastAdvertisingTime > 10000) {
     deviceAdvertising->start();
-    Serial.println("Advertising again...");
+    //Serial.println("Advertising again...");
     lastAdvertisingTime = millis();
   }
 
-  while (Serial.available() > 0) {
-    uint8_t byte = Serial.read();
+  if (Serial.available() > 0) {
+    uint8_t chunk[512];
+    int bytesRead = Serial.readBytes(chunk, 512);
 
-    if (imageSize == 0) {
-      if (imageIndex < 4) {
-        imageSize |= (size_t)byte << (8 * imageIndex);
-        imageIndex++;
-      }
-    } else {
-      if (imageIndex < imageSize) {
-        imageData[imageIndex++] = byte;
-      }
-      if (imageIndex == imageSize) {
-        imageReady = true;
-        break;
+    for (int i = 0; i < bytesRead; i++) {
+      if (imageSize == 0) {
+        if (imageIndex < 4) {
+          imageSize |= (size_t)chunk[i] << (8 * imageIndex);
+          imageIndex;
+        }
+      } else {
+        if (imageIndex < imageSize) {
+          imageData[imageIndex++] = chunk[i];
+        }
       }
     }
+    if (imageIndex >= imageSize) {
+      imageIndex = 0;
+      imageSize = 0;
+      imageReady = true;
+    }
   }
+  
   if (imageReady) {
-    sendImage(imageCharacteristic, imageData, image_size, 508, 10);
+    sendImage(imageCharacteristic, image, image_size, 508, 10);
     imageReady = false;
   }
   
