@@ -2,6 +2,8 @@
 import { Surreal, RootAuth } from "@surrealdb/surrealdb";
 import {SurrealConfig} from "../interfaces/surreal.interfaces.ts";
 import {load} from "jsr:@std/dotenv";
+import { Pacient } from "../interfaces/data.interface.ts";
+import { MqttData } from '../interfaces/data.interface';
 
 export class SurrealDbService {
 
@@ -50,6 +52,22 @@ export class SurrealDbService {
         console.error('Error initializing SurrealDB:', error);
         throw error;
       }
+    }
+    async getPacientInfo(id: string){
+        return await this.db.select(`pacient:${id}`);
+    }
+    async getPacientList(){
+        const result = await this.db.select('pacient');
+        return result;
+    }
+    async updatePacientData(id: string, data:MqttData){
+        try {
+            const updated = await this.db.merge(`pacient:${id}`, data);
+            return updated[0];
+        } catch (error) {
+            console.error(`Error updating record in pacient:`, error);
+            throw error;
+        }
     }
 /*
 // Create a new record

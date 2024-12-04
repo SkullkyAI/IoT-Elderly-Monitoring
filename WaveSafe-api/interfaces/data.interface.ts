@@ -21,3 +21,8 @@ export interface Pacient {
   floor: number;
   room: number;
 }
+
+export interface MqttData{
+  isFallen: boolean;
+  time_movement: number;
+}
