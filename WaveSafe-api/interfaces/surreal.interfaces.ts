@@ -1,4 +1,4 @@
-import { User } from "./data.interface.ts";
+import { User, Position } from "./data.interface.ts";
 
 export interface SurrealConfig {
   url: string;
@@ -9,11 +9,20 @@ export interface SurrealConfig {
   password: string;
 }
 export interface AuthCredentials {
-  email: string;
+  id:string;
+  user: string;
   password: string;
 }
 
 export interface AuthResponse {
   token: string;
   user: User;
+}
+
+export interface SurrealUser{
+  name: string;
+  surname: string;
+  email: string;
+  position: Position;
+  passwd: string;
 }

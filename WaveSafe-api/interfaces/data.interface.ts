@@ -1,4 +1,4 @@
-enum Position {
+export enum Position {
   Nurse,
   Doctor,
   Admin,
@@ -20,9 +20,17 @@ export interface Pacient {
   medical_score: number;
   floor: number;
   room: number;
+  [key: string]: unknown;
 }
 
 export interface MqttData{
+  idPacient: string;
   isFallen: boolean;
   time_movement: number;
+}
+
+export interface Notifications{
+  namePacient: string;
+  floor: number;
+  room: number;
 }
