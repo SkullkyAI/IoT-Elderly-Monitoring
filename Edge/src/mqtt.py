@@ -36,9 +36,9 @@ class MqttClient:
         self.client.connect(self.BROKER, self.PORT)
 
         self.patient_state = {
-            "idPacient": str(random.randint(1, 400)),
+            "idPacient": str(random.randint(1, 13)),
             "isFallen": False,
-            "timeMovement": random.randint(0, 3600)
+            "time_movement": random.randint(0, 3600)
         }
 
     async def send_loop(self):
@@ -46,7 +46,7 @@ class MqttClient:
             now = datetime.now()
             next_hour = (now + timedelta(minutes=1)).replace(second=0, microsecond=0)
             time_until_next_hour = (next_hour - now).total_seconds()
-            self.patient_state["timeMovement"] = random.randint(0, 3600)
+            self.patient_state["time_movement"] = random.randint(0, 3600)
 
             try:
                 fallen = await asyncio.wait_for(self.notification_queue.get(), timeout=time_until_next_hour)
@@ -75,12 +75,12 @@ class MqttClient:
         self.client.disconnect()
 
 if __name__ == "__main__":
-    c = MqttClient()
+    c = MqttClient(2)
     while True:
         state = {
-            "idPacient": str(1),
-            "isFallen": bool(random.randint(0, 1)),
-            "timeMovement": random.randint(0, 3600)
+            "idPacient": str(random.randint(1, 13)),
+            "isFallen": True,
+            "time_movement": random.randint(0, 3600)
         }
         c.send_message(state)
-        time.sleep(5)
+        time.sleep(10)

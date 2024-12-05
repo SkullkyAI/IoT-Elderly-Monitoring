@@ -33,6 +33,12 @@ uint8_t *imageData;
 size_t imageSize = 0;
 size_t imageIndex = 0;
 
+class MyServerCallbacks: public BLEServerCallbacks {
+  void onDisconnect(BLEServer* pServer){
+    deviceAdvertising->start();
+  }
+};
+
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
@@ -47,6 +53,7 @@ void setup() {
   // Initialize BLE Device
   BLEDevice::init(DEVICE_NAME);
   imageServer = BLEDevice::createServer();
+  imageServer->setCallbacks(new MyServerCallbacks());
 
   // Main Service
   imageService = imageServer->createService(IMAGE_SERVICE_UUID);
