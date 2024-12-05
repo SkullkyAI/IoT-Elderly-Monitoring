@@ -27,7 +27,6 @@ export class NotificationAlertComponent implements OnDestroy {
       },
       credentials: 'include'
       })).json();
-      console.log("response",response);
       return response;
 
     } catch (error) {
@@ -39,15 +38,13 @@ export class NotificationAlertComponent implements OnDestroy {
   constructor() {
     this.intervalId = setInterval(() => {
       this.checkForNewAlerts();
-      console.log("List of alerts",this.alertList());
     }, 5000);
     console.log("number alerts",this.alert());
   }
 
-  private checkForNewAlerts() {
-    this._alerts.reload();
+  private async checkForNewAlerts() {
+    await this._alerts.reload();
     const newAlerts = this._alerts.value || [];
-    console.log("new alerts",newAlerts());
 
     if (Array.isArray(newAlerts())) {
       this.alertList.set([...this.alertList(), ...(newAlerts() || [])]);

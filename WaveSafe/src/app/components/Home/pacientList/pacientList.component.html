@@ -18,11 +18,12 @@
         <a class="page-link">Previous</a>
       </li>
     }
-    <li class="page-item"><a class="page-link" (click)="goToPage(1)" style="cursor: pointer">1</a></li>
-    <li class="page-item"><a class="page-link" (click)="goToPage(2)" style="cursor: pointer">2</a></li>
-    <li class="page-item"><a class="page-link" (click)="goToPage(3)" style="cursor: pointer">3</a></li>
-    <li class="page-item"><a class="page-link" (click)="goToPage(4)" style="cursor: pointer">4</a></li>
-    @if(currentPage() < MaxPageExistence()){
+    @for (page of paginationPages; track $index + 1) {
+      <li class="page-item">
+        <a class="page-link" (click)="goToPage(page)" style="cursor: pointer">{{page}}</a>
+      </li>
+    }
+    @if(currentPage() < maxPages){
       <li class="page-item">
         <a class="page-link" (click)="nextPage()" style="cursor: pointer">Next</a>
       </li>

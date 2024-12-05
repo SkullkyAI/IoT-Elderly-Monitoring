@@ -18,3 +18,18 @@ export interface Pacient{
   floor: number;
   room: number;
 }
+
+export interface PacientAInfo{
+  name: string;
+  surname: string;
+  age: number;
+  medical_summary: string;
+  additional_medical_details: string;
+  data:Data[];
+}
+
+export interface Data{
+  date: Date;
+  falling: boolean;
+  movement:number;
+}

@@ -112,8 +112,7 @@ router
   .get("/notifications", authMiddleware, (ctx) => {
     const notifications = surrealDbService.notifications;
     surrealDbService.notifications = [];
-    console.log("Getting Notifications...");
-    console.log(surrealDbService.notifications);
+
     ctx.response.body = notifications;
     return ctx.response;
   });

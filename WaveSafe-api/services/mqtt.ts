@@ -23,7 +23,6 @@ export class MqttService {
         const rawMessage = decoder.decode(message);
         const correctedMessage = rawMessage.replace(/'/g, '"');
         const data = JSON.parse(correctedMessage);
-        console.log("Datos parseados:", data);
 
         // Verificar si los datos son válidos antes de procesarlos
         if (data) {

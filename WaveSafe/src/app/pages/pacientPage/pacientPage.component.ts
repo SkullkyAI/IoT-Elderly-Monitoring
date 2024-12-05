@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { PacientAnalysisComponent } from '../../components/pacientAnalysis/pacientAnalysis.component';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { RestAPIService } from '../../services/restAPI.service';
 import { ActivatedRoute } from '@angular/router';
+import { PacientAInfo } from '../../interfaces/data.interface';
 
 @Component({
     imports: [
@@ -38,11 +39,14 @@ export class PacientPageComponent implements OnInit {
   private readonly _route = inject(ActivatedRoute);
 
   private pacientId: string = '';
-  profile_info = this._restApi.getPacientInfo(this.pacientId);
+  profile_info = signal<PacientAInfo | null>(null);
 
-  ngOnInit() {
+  async ngOnInit() {
     this._route.params.subscribe(params => this.pacientId = params['id']);
-    console.log(this.pacientId);
+    this.profile_info.set(await this._restApi.getPacientInfo(this.pacientId));
+
+
+    console.log(this.profile_info());
   }
 }
 

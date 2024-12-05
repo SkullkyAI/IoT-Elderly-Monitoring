@@ -75,8 +75,8 @@ export class SurrealDbService {
         return result[0][0];
     }
     async getPacientList(){
-        const result = await this.db.select('pacient');
-        return result;
+        const result = await this.db.query('select *, ->data_pacient->residence.{floor} as floor, ->data_pacient->residence.{room} as room from pacient');
+        return result[0];
     }
     async updatePacientData(id: string, data:MqttData){
         try {
@@ -113,7 +113,6 @@ export class SurrealDbService {
                     floor: pacientInfo.floor,
                     room: pacientInfo.room
                 });
-                console.log(this.notifications);
             }
         }
         await this.updatePacientData(message.idPacient, message);

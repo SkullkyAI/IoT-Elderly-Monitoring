@@ -43,3 +43,5 @@ Thumbs.db
 
 # Project files
 public/imagenes_provisional
+.vscode/
+.idea/
