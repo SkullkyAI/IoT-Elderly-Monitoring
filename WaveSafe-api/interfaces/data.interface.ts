@@ -17,20 +17,20 @@ export interface Pacient {
   name: string;
   surname: string;
   age: number;
-  dni:string;
+  dni: string;
   medical_score: number;
-  additional_medical_details:string;
+  additional_medical_details: string;
   floor: number;
   room: number;
 }
 
-export interface MqttData{
+export interface MqttData {
   idPacient: string;
   isFallen: boolean;
   time_movement: number;
 }
 
-export interface Notifications{
+export interface Notifications {
   id: string;
   namePacient: string;
   floor: number;

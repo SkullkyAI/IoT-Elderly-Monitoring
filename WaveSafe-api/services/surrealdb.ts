@@ -1,10 +1,8 @@
 import { create, verify } from "https://deno.land/x/djwt@v2.9.1/mod.ts";
-import * as argon2 from "jsr:@felix/argon2";
 import { Surreal, RootAuth } from "@surrealdb/surrealdb";
 import {QueryResult, SurrealConfig} from "../interfaces/surreal.interfaces.ts";
 import {load} from "jsr:@std/dotenv";
-import { MqttData, Notifications, Pacient } from '../interfaces/data.interface.ts';
-import {  AuthCredentials } from '../interfaces/surreal.interfaces.ts';
+import { MqttData, Notifications } from '../interfaces/data.interface.ts';
 await load({ export: true });
 
 export class SurrealDbService {
@@ -29,10 +27,6 @@ export class SurrealDbService {
         false,
         ["sign", "verify"]
       );
-    }
-
-    private async _verifyPassword(hash: string, password: string): Promise<boolean> {
-        return await argon2.verify(hash, password);
     }
 
     private initializeConfig() {
@@ -76,9 +70,9 @@ export class SurrealDbService {
     }
     async getPacientInfo(id: string){
         const _route:string = `pacient:${id}`;
-        const result = await this.db.query(`select * from pacient:${id}`);
+        const result = await this.db.query(`select *, ->data_pacient->data.{date, falling, movement} as data from pacient:${id}`);
         console.log(result);
-        return result ;
+        return result[0][0];
     }
     async getPacientList(){
         const result = await this.db.select('pacient');
@@ -87,10 +81,11 @@ export class SurrealDbService {
     async updatePacientData(id: string, data:MqttData){
         try {
             // Generar un ID aleatorio entre 1 y 10000
-            const randomId = Math.floor(Math.random() * 10000) + 1;
+            const randomId = Math.random().toString(36).substring(2, 10);
             const _ = await this.db.query
                 (`
                 create data:${randomId} set falling=${data.isFallen}, movement=${data.time_movement};
+                relate pacient:${id}->data_pacient->data:${randomId};
                 `);
         } catch (error) {
             console.error(`Error updating record in pacient:`, error);
@@ -107,13 +102,19 @@ export class SurrealDbService {
                 floor:temp[0][0].residence[0].floor, 
                 room:temp[0][0].residence[0].room
             };
-            this.notifications.push({
-                id:message.idPacient,
-                namePacient: pacientInfo.namePacient,
-                floor: pacientInfo.floor,
-                room: pacientInfo.room
-            })
-            console.log(this.notifications);
+            
+            // Comprobar si ya existe una notificación para este paciente
+            const notificationExists = this.notifications.some(notification => notification.id === message.idPacient);
+            
+            if (!notificationExists) {
+                this.notifications.push({
+                    id: message.idPacient,
+                    namePacient: pacientInfo.namePacient,
+                    floor: pacientInfo.floor,
+                    room: pacientInfo.room
+                });
+                console.log(this.notifications);
+            }
         }
         await this.updatePacientData(message.idPacient, message);
 
@@ -140,24 +141,23 @@ export class SurrealDbService {
         try {
             const [userAuth] = await this.db.query<[{ id: string, username: string }]>(`
                 SELECT id, username FROM user 
-                WHERE user = $user
+                WHERE email = $user
             `, { user });
             console.log(userAuth);
-            const username = userAuth.username;
+            const username = userAuth[0].username;
 
             if (!user) return null;
+            console.log(username);
             
-            const aa = await this.db.query<[boolean]>(
+            const isValid = await this.db.query<[boolean]>(
                 `RETURN fn::verification($username, $password);`,
                 {
                   username,
                   password,
                 }
               );
-            console.log(aa);
 
-            // const isValid = await this._verifyPassword(user.passwd, password);
-            // if (!isValid) return null;
+            if (!isValid) return null;
 
             const token = await this.generateToken(userAuth.id);
             return {

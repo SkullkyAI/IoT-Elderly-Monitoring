@@ -20,7 +20,7 @@
     </div>
   }@else {
     @for (item of alertList(); track $index) {
-        <alert-card />
+      <alert-card [alertInfo]="item"/>
     }
   }
 </div>
