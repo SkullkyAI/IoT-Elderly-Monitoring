@@ -17,10 +17,11 @@ export interface Pacient {
   name: string;
   surname: string;
   age: number;
+  dni:string;
   medical_score: number;
+  additional_medical_details:string;
   floor: number;
   room: number;
-  [key: string]: unknown;
 }
 
 export interface MqttData{
@@ -30,7 +31,12 @@ export interface MqttData{
 }
 
 export interface Notifications{
+  id: string;
   namePacient: string;
   floor: number;
   room: number;
+}
+export interface AuthCredentialsSys {
+  username: string;
+  password: string;
 }

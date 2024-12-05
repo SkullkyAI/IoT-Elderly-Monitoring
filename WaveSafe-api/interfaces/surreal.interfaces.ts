@@ -26,3 +26,18 @@ export interface SurrealUser{
   position: Position;
   passwd: string;
 }
+export interface SurrealPacient{
+  id: string;
+  name: string;
+  surname: string;
+  age: number;
+  dni: string;
+  medical_score: number;
+  additional_medical_details: string;
+
+}
+export interface QueryResult {
+  id: string;
+  name: string;
+  residence: { floor: number; room: number; }[];
+}

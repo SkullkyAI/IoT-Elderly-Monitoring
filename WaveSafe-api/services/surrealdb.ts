@@ -1,7 +1,7 @@
 import { create, verify } from "https://deno.land/x/djwt@v2.9.1/mod.ts";
 import * as argon2 from "jsr:@felix/argon2";
 import { Surreal, RootAuth } from "@surrealdb/surrealdb";
-import {SurrealConfig} from "../interfaces/surreal.interfaces.ts";
+import {QueryResult, SurrealConfig} from "../interfaces/surreal.interfaces.ts";
 import {load} from "jsr:@std/dotenv";
 import { MqttData, Notifications, Pacient } from '../interfaces/data.interface.ts';
 import {  AuthCredentials } from '../interfaces/surreal.interfaces.ts';
@@ -74,12 +74,11 @@ export class SurrealDbService {
         throw error;
       }
     }
-    async getPacientInfo(id: string):Promise<Pacient>{
+    async getPacientInfo(id: string){
         const _route:string = `pacient:${id}`;
-        const result = await this.db.select<Pacient>(_route);
-        // const result = await this.db.query(`select * from pacient where id == ${id}`);
+        const result = await this.db.query(`select * from pacient:${id}`);
         console.log(result);
-        return result as unknown as Pacient;
+        return result ;
     }
     async getPacientList(){
         const result = await this.db.select('pacient');
@@ -87,9 +86,12 @@ export class SurrealDbService {
     }
     async updatePacientData(id: string, data:MqttData){
         try {
-            const plainData = { ...data } as { [key: string]: unknown };
-            const updated = await this.db.merge(`pacient:${id}`, plainData);
-            return updated[0];
+            // Generar un ID aleatorio entre 1 y 10000
+            const randomId = Math.floor(Math.random() * 10000) + 1;
+            const _ = await this.db.query
+                (`
+                create data:${randomId} set falling=${data.isFallen}, movement=${data.time_movement};
+                `);
         } catch (error) {
             console.error(`Error updating record in pacient:`, error);
             throw error;
@@ -97,13 +99,21 @@ export class SurrealDbService {
     }
     async setMqttData(message: MqttData){
         if (message.isFallen){
-            const pacient = await this.getPacientInfo(message.idPacient);
-            console.log(pacient);
+            
+            const temp = await this.db.query<[QueryResult[]]>(`select id, name, ->data_pacient->residence.{floor,room} as residence from pacient:${message.idPacient}`);
+            const pacientInfo:Notifications = {
+                id:'',
+                namePacient:temp[0][0].name, 
+                floor:temp[0][0].residence[0].floor, 
+                room:temp[0][0].residence[0].room
+            };
             this.notifications.push({
-                namePacient: pacient.name,
-                floor: pacient.floor,
-                room: pacient.room
+                id:message.idPacient,
+                namePacient: pacientInfo.namePacient,
+                floor: pacientInfo.floor,
+                room: pacientInfo.room
             })
+            console.log(this.notifications);
         }
         await this.updatePacientData(message.idPacient, message);
 
@@ -114,9 +124,6 @@ export class SurrealDbService {
             sub: userId,
             exp: new Date().getTime() + (2*60 * 60 * 1000), // 2 horas
         };
-        
-        
-        
         return await create({ alg: "HS512", typ: "JWT" }, payload, this.jwtSecret);
     }
 
@@ -129,24 +136,35 @@ export class SurrealDbService {
         }
     }
 
-    async loginUser(username: string, password: string) {
+    async loginUser(user: string, password: string) {
         try {
-            const [user] = await this.db.query<[AuthCredentials]>(`
-                SELECT id, user, passwd FROM user 
-                WHERE username = $username
-            `, { username });
+            const [userAuth] = await this.db.query<[{ id: string, username: string }]>(`
+                SELECT id, username FROM user 
+                WHERE user = $user
+            `, { user });
+            console.log(userAuth);
+            const username = userAuth.username;
 
             if (!user) return null;
+            
+            const aa = await this.db.query<[boolean]>(
+                `RETURN fn::verification($username, $password);`,
+                {
+                  username,
+                  password,
+                }
+              );
+            console.log(aa);
 
-            const isValid = await this._verifyPassword(user.password, password);
-            if (!isValid) return null;
+            // const isValid = await this._verifyPassword(user.passwd, password);
+            // if (!isValid) return null;
 
-            const token = await this.generateToken(user.id);
+            const token = await this.generateToken(userAuth.id);
             return {
                 token,
                 user: {
-                    id: user.id,
-                    username: user.user
+                    id: userAuth.id,
+                    username: userAuth.username
                 }
             };
         } catch (error) {
