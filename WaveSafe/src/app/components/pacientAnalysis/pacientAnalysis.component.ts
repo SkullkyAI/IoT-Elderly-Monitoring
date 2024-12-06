@@ -9,12 +9,8 @@ import { ChartService } from '../../services/charts.service';
   CommonModule,
   ],
   template: `
-      @defer (when onLoading()) {
-      <div id="movement_plot"></div>
-      <div id="falling_plot"></div>
-      }@placeholder {
-      <div class="loader"></div>
-      }
+      <canvas id="movement_plot" width="400" height="250"></canvas>
+      <canvas id="falling_plot" width="400" height="250"></canvas>
       `,
   styleUrl: './pacientAnalysis.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,19 +18,16 @@ import { ChartService } from '../../services/charts.service';
 export class PacientAnalysisComponent implements OnInit {
 
   private ChSv = inject(ChartService);
-  public data = input<Array<Array<number>>| undefined>();
-  public data_bars = input<Array<number>| undefined>();
-  public dates = input<Array<string> | undefined>();
+  public lineData = input<Array<number>>();
+  public data_bars = input<Array<boolean>>();
+  public dates = input<Array<Date>>();
   private _loadControl = signal<Array<boolean>>([false, false]);
   protected onLoading = linkedSignal(()=> (this._loadControl()[0] && this._loadControl()[1])?true:false);
 
   async ngOnInit() {
-    this.ChSv.dates = this.dates()!;
-    await Promise.all([
-      this.ChSv.movementPlotGenerator(this.data()!, 'movement_plot'),
-      this.ChSv.fallingPlotGenerator(this.data_bars()!, 'falling_plot')
-    ]);
+    this._loadControl.set(await Promise.all([
+      this.ChSv.movementPlotGenerator(this.lineData()!, this.dates()!, 'movement_plot'),
+      this.ChSv.fallingPlotGenerator(this.data_bars()!, this.dates()!, 'falling_plot')
+    ]));
   }
-
-
 }
