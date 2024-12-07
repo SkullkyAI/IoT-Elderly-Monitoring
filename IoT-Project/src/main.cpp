@@ -71,43 +71,13 @@ void setup() {
 
   std::string message = "BLE device is now advertising with name: " + DEVICE_NAME;
   Serial.println(message.c_str());
-
-  // Initialize image buffer to a fixed size
-  imageData = (uint8_t *)malloc(512 * 512);
 }
 
 void loop() {
   static unsigned int index = 0;
-  // static bool imageReady = false;
-
-  // if (Serial.available() > 0) {
-  //   uint8_t chunk[512];
-  //   int bytesRead = Serial.readBytes(chunk, 512);
-
-  //   for (int i = 0; i < bytesRead; i++) {
-  //     if (imageSize == 0) {
-  //       if (imageIndex < 4) {
-  //         imageSize |= (size_t)chunk[i] << (8 * imageIndex);
-  //         imageIndex;
-  //       }
-  //     } else {
-  //       if (imageIndex < imageSize) {
-  //         imageData[imageIndex++] = chunk[i];
-  //       }
-  //     }
-  //   }
-  //   if (imageIndex >= imageSize) {
-  //     imageIndex = 0;
-  //     imageSize = 0;
-  //     imageReady = true;
-  //   }
-  // }
   
-  // if (imageReady) {
-    sendImage(imageCharacteristic, images[index], imageSizes[index], 508, 10);
-    index = (++index % 3);
-    // imageReady = false;
-  // }
+  sendImage(imageCharacteristic, images[index], imageSizes[index], 508, 10);
+  index = (++index % 3);
   
   delay(4000);
 }
