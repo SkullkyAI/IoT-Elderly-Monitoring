@@ -5,6 +5,9 @@ __pycache__/
 
 .DS_Store
 Thumbs.db
+WaveSafe_old/
+node_modules
+.angular
 
 .vscode
 .venv
