@@ -1,18 +1,14 @@
-import os
 import asyncio
-from dotenv import load_dotenv
+import torch
 
-from PIL import Image
-import google.generativeai as genai
+from ultralytics import YOLO
 
 class FallDetector:
     def __init__(self, image_queue: asyncio.Queue, notification_queue: asyncio.Queue):
         self.image_queue = image_queue
         self.notification_queue = notification_queue
 
-        load_dotenv()
-        genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        self.model = genai.GenerativeModel(model_name='gemini-1.5-flash')
+        self.model = YOLO('models/best_ncnn_model', task="detect")
     
     async def process_images(self):
         while True:
@@ -20,24 +16,16 @@ class FallDetector:
                 image_path = await self.image_queue.get()
                 if image_path is None:
                     break
-                image = Image.open(image_path)
-                response = await self.detect_fall(image)
-                print(response)
-                image.close()
+                response = await self.detect_fall(image_path)
+                if response:
+                    asyncio.create_task(self.notification_queue.put(response))
             except Exception as e:
                 print(f"Error processing image {image_path}: {e}")
 
-    async def detect_fall(self, image):
-        prompt = [image,
-                  "Detect if the person in the image has fallen or not.",
-                  "Always respond with a single word: 'Yes' or 'No'."]
-        response = self.model.generate_content(prompt)
-        try:
-            response = response.candidates[0].content.parts[0].text.strip()
-            if response.lower() == 'yes':
-                await self.notification_queue.put(True)
-            return response
-        
-        except (IndexError, AttributeError) as e:
-            print("Error extracting response text:", e)
-            return None
+    async def detect_fall(self, image_path):
+        responses = self.model.predict(image_path, max_det=1, classes=[0])
+        if torch.any(responses[0].boxes.cls == 0.).item():
+            return True
+        else:
+            return False
+    

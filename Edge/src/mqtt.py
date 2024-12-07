@@ -6,24 +6,22 @@ import asyncio
 import json
 
 class MqttClient:
-    BROKER = "test.mosquitto.org"
+    BROKER = "broker.emqx.io"
     PORT = 1883
     TOPIC = "elder/monitor"
     CLIENT_ID = f"python-mqtt-{random.randint(0, 1000)}"
     USERNAME = None
     PASSWORD = None
-    FALL_ALERT = "SA CAÍDO, NO ES UN SIMULACRO, SA CAÍDO"
-    PERIODIC_PAYLOAD = "todo en orden, nada que reportar"
 
     def __init__(self, notification_queue):
         self.notification_queue = notification_queue
 
-        self.client = mqtt.Client(client_id=self.CLIENT_ID, callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
+        self.client = mqtt.Client(client_id=self.CLIENT_ID, callback_api_version=mqtt.CallbackAPIVersion.VERSION2)        
         self.client.connect_timeout = 30
         
         if self.USERNAME and self.PASSWORD:
             self.client.username_pw_set(self.USERNAME, self.PASSWORD)
-        
+
         def on_connect(client, userdata, flags, rc, properties):
             if rc == 0:
                 print("Connected to MQTT broker!")
@@ -34,6 +32,7 @@ class MqttClient:
         
         print("[MQTT]: Connecting to broker...")
         self.client.connect(self.BROKER, self.PORT)
+        print("[MQTT]: Connected to broker")
 
         self.patient_state = {
             "idPacient": str(random.randint(1, 13)),
@@ -67,7 +66,7 @@ class MqttClient:
         if status == 0:
             print(f"Sent '{payload}' to topic {self.TOPIC}")
         else:
-            print(f"Failed to send message to topic {self.TOPIC}")
+            print(f"Failed to send message to topic {self.TOPIC}. Status code: {status}")
     
     def disconnect(self):
         print("Stopping client...")

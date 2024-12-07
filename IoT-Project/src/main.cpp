@@ -34,7 +34,7 @@ size_t imageSize = 0;
 size_t imageIndex = 0;
 
 class MyServerCallbacks: public BLEServerCallbacks {
-  void onDisconnect(BLEServer* pServer){
+  void onDisconnect(BLEServer* pServer) {
     deviceAdvertising->start();
   }
 };
@@ -77,15 +77,8 @@ void setup() {
 }
 
 void loop() {
-  static unsigned long lastAdvertisingTime = 0;
   static unsigned int index = 0;
   // static bool imageReady = false;
-
-  if (millis() - lastAdvertisingTime > 10000) {
-    deviceAdvertising->start();
-    Serial.println("Advertising again...");
-    lastAdvertisingTime = millis();
-  }
 
   // if (Serial.available() > 0) {
   //   uint8_t chunk[512];
@@ -116,5 +109,5 @@ void loop() {
     // imageReady = false;
   // }
   
-  delay(500);
+  delay(4000);
 }
