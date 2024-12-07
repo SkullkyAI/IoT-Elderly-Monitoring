@@ -8,7 +8,7 @@ export class MqttService {
   private surrealDbService: SurrealDbService;
 
   constructor(SS: SurrealDbService) {
-    this.client = new Client({ url: "mqtt://test.mosquitto.org" });
+    this.client = new Client({ url: "mqtt://broker.emqx.io" });
     this.client.connect();
     this.iniciarEscucha();
     this.surrealDbService = SS;

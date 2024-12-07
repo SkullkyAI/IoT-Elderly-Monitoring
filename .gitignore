@@ -7,3 +7,8 @@ __pycache__/
 Thumbs.db
 /IoT-Project/.vscode
 WaveSafe_old/
+
+.venv
+.env
+.vscode
+.pio
