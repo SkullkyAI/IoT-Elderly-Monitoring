@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BarElement, CategoryScale, Chart, ChartConfiguration, ChartData, ChartType, LinearScale, LineController, LineElement, PointElement, scales } from 'chart.js';
-import { BoxPlotController, BoxAndWiskers } from '@sgratzl/chartjs-chart-boxplot';
+import { BarElement, CategoryScale, Chart, ChartConfiguration, ChartData, ChartType, LinearScale, LineController, LineElement, PointElement, scales, Tooltip, Legend, Plugin} from 'chart.js';
+import { BoxPlotController, BoxAndWiskers} from '@sgratzl/chartjs-chart-boxplot';
 
 
 @Injectable({
@@ -27,10 +27,9 @@ export class ChartService {
 
     const config: ChartConfiguration<'line'> = {
       type: 'line',
-      data,
+      data: data,
       options: {
         responsive: true,
-        maintainAspectRatio: true,
         scales:{
           x: {
             type: 'category',
@@ -47,17 +46,6 @@ export class ChartService {
               text: 'Minutes of Movement',
             }
           }
-        },
-        plugins: {
-          legend: {
-            display: true,
-            position: 'top',
-          },
-          tooltip: {
-            enabled: true,
-            mode: 'nearest',
-            intersect: false,
-          },
         },
       },
     };
@@ -88,34 +76,48 @@ export class ChartService {
     const bar_data: ChartData<'bar'> = {
       labels: labels,
       datasets: [{
-        label: 'Falling Data',
+        label: 'Fall data',
         data: groupedSums,
-        type: 'bar'
-      }]
+        borderColor: 'rgba(75, 192, 192, 0.2)',
+        backgroundColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+      },]
     };
 
-    const ctx = document.getElementById(name) as HTMLCanvasElement;
-    new Chart(ctx, {
+    const config: ChartConfiguration<'bar'> = {
       type: 'bar',
       data: bar_data,
       options: {
         responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
         scales: {
           x: {
+            display: true,
             type: 'category',
+            title: {
+              display: true,
+              text: 'Hours',
+            },
           },
           y: {
+            display: true,
             type: 'linear',
-            beginAtZero: true
+            min: 0,
+            max: 1,
+            ticks: {
+              stepSize: 1,
+            },
+            title: {
+              display: true,
+              text: 'Fall data',
+            }
           }
-        }
-      }
-    });
+        },
+      },
+    };
+
+    const ctx = document.getElementById(name) as HTMLCanvasElement;
+    new Chart(ctx, config);
+
     return true;
   }
 }

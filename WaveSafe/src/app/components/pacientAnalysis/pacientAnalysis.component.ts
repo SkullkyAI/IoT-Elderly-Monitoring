@@ -9,8 +9,14 @@ import { ChartService } from '../../services/charts.service';
   CommonModule,
   ],
   template: `
-      <canvas id="movement_plot" width="400" height="250"></canvas>
-      <canvas id="falling_plot" width="400" height="250"></canvas>
+      <div class="chart">
+        <h2 style="padding: 30px">Movement chart (minutes each hour)</h2>
+        <canvas id="movement_plot"></canvas>
+      </div>
+      <div class="chart">
+        <h2 style="padding: 30px">Fall chart (fallen or not each hour)</h2>
+        <canvas id="falling_plot"></canvas>
+      </div>
       `,
   styleUrl: './pacientAnalysis.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

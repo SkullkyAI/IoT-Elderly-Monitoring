@@ -27,7 +27,7 @@ import { Data } from 'plotly.js';
           <p>Medicación: {{profile_info()!.additional_medical_details}}</p>
        </div>
       </div>
-      <div>
+      <div style="padding-left: 30px">
         <h1>Estadísticas</h1>
       </div>
       <pacient-analysis [lineData]="lineData" [data_bars]="data_bars" [dates]="date"/>

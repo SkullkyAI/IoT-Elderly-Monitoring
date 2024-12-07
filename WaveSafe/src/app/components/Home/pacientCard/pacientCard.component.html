@@ -1,4 +1,4 @@
-<div class="card mb-3" id="pricipal" style="max-width: 540px;">
+<div class="card mb-3" id="pricipal">
   <div class="row g-0">
     @if (info()) {
       <div class="col-md-4">
@@ -12,9 +12,8 @@
         <div class="card-body">
           <h5 class="card-title"><strong>Name:</strong> {{info()!.name}} {{info()!.surname}} </h5>
           <p class="card-text"><strong>Age:</strong> {{info()!.age}}</p>
-          <p class="card-text"><strong>Medical summary:</strong> {{info()!.medical_summary}}
-            <small>{{info()!.additional_medical_details}}</small>
-          </p>
+          <p class="card-text"><strong>Medical summary:</strong> {{info()!.medical_summary}}</p>
+          <p class="card-text"><small>{{info()!.additional_medical_details}}</small></p>
           <p class="card-text"><small class="text-body-secondary">Floor: {{info()!.floor}}  Room: {{info()!.room}} </small></p>
         </div>
       </div>
