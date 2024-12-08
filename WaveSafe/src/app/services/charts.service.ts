@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BarElement, CategoryScale, Chart, ChartConfiguration, ChartData, ChartType, LinearScale, LineController, LineElement, PointElement, scales, Tooltip, Legend, Plugin} from 'chart.js';
+import { BarElement, CategoryScale, Chart, ChartConfiguration, ChartData, ChartType, LinearScale, LineController, LineElement, PointElement} from 'chart.js';
 import { BoxPlotController, BoxAndWiskers} from '@sgratzl/chartjs-chart-boxplot';
 
 

@@ -31,5 +31,5 @@ export interface PacientAInfo{
 export interface Data{
   date: Date;
   falling: boolean;
-  movement:number;
+  movement: number;
 }
