@@ -68,16 +68,15 @@ class BLEManager:
     
     def notification_handler(self, sender, data):
         INDEX_SIZE = 4
-        DATA_START = INDEX_SIZE
 
         if not self.inprogress_image:
-            if data[DATA_START:DATA_START + 2] != self.START_MARKER:
+            if data[INDEX_SIZE:INDEX_SIZE + 2] != self.START_MARKER:
                 return
             print("Receiving new image!")
             self.inprogress_image = True
         
         index = int.from_bytes(data[:INDEX_SIZE], byteorder='little')
-        image_data = data[DATA_START:]
+        image_data = data[INDEX_SIZE:]
         self.image_buffer[index] = image_data
 
         if data[-2:] == self.END_MARKER:

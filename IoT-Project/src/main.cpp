@@ -19,7 +19,7 @@ BLEServer *imageServer = NULL;
 BLEService *imageService = NULL;
 
 // Characteristics
-#define IMAGE_CHARACTERISTIC_UUID "0000181a-0000-1000-8000-00805f9b34fc" // Body Composition Service (BCS) UUID: 0x181B
+#define IMAGE_CHARACTERISTIC_UUID "0000181a-0000-1000-8000-00805f9b34fc"
 BLECharacteristic *imageCharacteristic = NULL;
 
 // Advertising
@@ -29,9 +29,6 @@ BLEAdvertising *deviceAdvertising = NULL;
 const std::string DEVICE_NAME = "IoT9_ESP32";
 const unsigned char* images[] = {image1, image2, image3};
 const unsigned int imageSizes[] = {image1_size, image2_size, image3_size};
-uint8_t *imageData;
-size_t imageSize = 0;
-size_t imageIndex = 0;
 
 class MyServerCallbacks: public BLEServerCallbacks {
   void onDisconnect(BLEServer* pServer) {
@@ -43,7 +40,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
 
-  // Clean
+  // Clean to apply device name change
   esp_err_t err = nvs_flash_init();
   if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
     ESP_ERROR_CHECK(nvs_flash_erase());

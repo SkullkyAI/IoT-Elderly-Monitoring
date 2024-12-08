@@ -14,8 +14,6 @@ class FallDetector:
         while True:
             try:
                 image_path = await self.image_queue.get()
-                if image_path is None:
-                    break
                 response = await self.detect_fall(image_path)
                 if response:
                     asyncio.create_task(self.notification_queue.put(response))
