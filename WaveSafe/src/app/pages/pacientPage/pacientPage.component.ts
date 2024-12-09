@@ -16,7 +16,7 @@ import { Data } from 'plotly.js';
     template: `
       <navbar />
       <div class="pacienProfile">
-        <img src="http://placehold.it/1000x300" alt="imagen" />
+        <img [src]="profile_info()!.image" alt="imagen" />
         <div class="pacientDetails">
           <h1>{{profile_info()!.name}} {{profile_info()!.surname}}</h1>
           <p>Edad: {{profile_info()!.age}}</p>

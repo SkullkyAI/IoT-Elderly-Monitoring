@@ -23,6 +23,7 @@ export interface PacientAInfo{
   name: string;
   surname: string;
   age: number;
+  image:string;
   medical_summary: string;
   additional_medical_details: string;
   data:Data[];
