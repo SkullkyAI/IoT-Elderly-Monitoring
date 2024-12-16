@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-70%);
+  margin-top: 2.5rem;
+  min-width: 200px; /* Ajusta este valor según necesites */
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#alert-button {
+  background-color: transparent;
+  border-color: transparent;
+}

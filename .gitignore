@@ -5,3 +5,10 @@ __pycache__/
 
 .DS_Store
 Thumbs.db
+/IoT-Project/.vscode
+WaveSafe_old/
+
+.venv
+.env
+.vscode
+.pio

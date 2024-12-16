@@ -1,0 +1,37 @@
+<div class="card mb-3" id="pricipal">
+  <div class="row g-0">
+    @if (info()) {
+      <div class="col-md-4">
+        <!-- <img [src]="info()!.image|base64Image" class="img-fluid rounded-start" alt="..."> -->
+        <a href="pacient/{{info()?.id}}">
+          <img [src]="info()!.image" class="img-fluid rounded-start" [alt]=" info()!.name + info()!.surname ">
+          <!-- <img src="https://placehold.co/200x250" class="img-fluid rounded-start" [alt]=" info()!.name + info()!.surname "> -->
+        </a>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title"><strong>Name:</strong> {{info()!.name}} {{info()!.surname}} </h5>
+          <p class="card-text"><strong>Age:</strong> {{info()!.age}}</p>
+          <p class="card-text"><strong>Medical summary:</strong> {{info()!.medical_summary}}</p>
+          <p class="card-text"><small>{{info()!.additional_medical_details}}</small></p>
+          <p class="card-text"><small class="text-body-secondary">Floor: {{info()!.floor}}  Room: {{info()!.room}} </small></p>
+        </div>
+      </div>
+    }@else {
+      <div class="col-md-4">
+        <div class="img-fluid rounded-start skeleton-loader" ></div>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <div class="text-loader" style="--width: 200px"></div>
+          <div class="text-loader" style="--width: 80px"></div>
+          <div class="text-loader" style="--width: 285px"></div>
+          <div class="text-loader" style="--width: 285px"></div>
+          <div class="text-loader" style="--width: 285px"></div>
+          <div class="text-loader text-body-secondary" style="--width: 125px"></div>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>
