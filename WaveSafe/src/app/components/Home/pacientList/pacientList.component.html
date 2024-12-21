@@ -1,0 +1,36 @@
+<div>
+  @for (pacient of pacientList()[currentPage() - 1]; track $index) {
+    @defer(on timer(3000)) {
+      <pacient-card [info]="pacient"/>
+    } @placeholder {
+      <pacient-card [info]=""/>
+    }
+  }
+</div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    @if(currentPage() > 1){
+      <li class="page-item">
+        <a class="page-link" (click)="previousPage()" style="cursor: pointer">Previous</a>
+      </li>
+    } @else {
+      <li class="page-item disabled">
+        <a class="page-link">Previous</a>
+      </li>
+    }
+    @for (page of paginationPages; track $index + 1) {
+      <li class="page-item">
+        <a class="page-link" (click)="goToPage(page)" style="cursor: pointer">{{page}}</a>
+      </li>
+    }
+    @if(currentPage() < maxPages){
+      <li class="page-item">
+        <a class="page-link" (click)="nextPage()" style="cursor: pointer">Next</a>
+      </li>
+    } @else {
+      <li class="page-item disabled">
+        <a class="page-link">Next</a>
+      </li>
+    }
+  </ul>
+</nav>
