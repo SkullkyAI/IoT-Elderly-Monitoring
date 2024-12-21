@@ -5,3 +5,11 @@ __pycache__/
 
 .DS_Store
 Thumbs.db
+
+.vscode
+.pio
+.venv
+.angular
+.env
+node_modules
+imagenes_provisional
