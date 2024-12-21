@@ -21,9 +21,9 @@ import { Data } from 'plotly.js';
           <h1>{{profile_info()!.name}} {{profile_info()!.surname}}</h1>
           <p>Edad: {{profile_info()!.age}}</p>
           <p>Sexo: Hombre</p>
-          <p>Fecha de nacimiento: 01/01/2000</p>
+          <p>Fecha de nacimiento: 25/03/1942</p>
           <p>Diagnóstico: {{profile_info()!.medical_summary}}</p>
-          <p>Fecha de diagnóstico: 01/01/2020</p>
+          <p>Fecha de diagnóstico: 01/09/2020</p>
           <p>Medicación: {{profile_info()!.additional_medical_details}}</p>
        </div>
       </div>
